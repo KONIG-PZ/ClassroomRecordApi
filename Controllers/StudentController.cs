@@ -4,10 +4,7 @@ using ClassroomRecordApi.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Net;
-using System.Reflection;
-using static System.Collections.Specialized.BitVector32;
+
 
 namespace ClassroomRecordApi.Controllers
 {
@@ -62,20 +59,9 @@ namespace ClassroomRecordApi.Controllers
         [HttpGet("{id:guid}")]
         public IActionResult GetStudentById(Guid id)
         {
-            try
-            {
-                var student = dbContext.Students.Find(id);
-
-                if (student is null)
-                {
-                    return NotFound("Student Not Found");
-                }
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred");
-            }
+            var student = dbContext.Students.Find(id);
+            if (student is null) return NotFound("Student Not Found");
+            return Ok(student);
         }
 
         //Put

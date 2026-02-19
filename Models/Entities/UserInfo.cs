@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ClassroomRecordApi.Models.Entities;
 
@@ -10,5 +11,6 @@ public class UserInfo
     [Required][MaxLength(20)] public string Role { get; set; } = "";
     [Required][MaxLength(100)][EmailAddress] public string Email { get; set; } = "";
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [JsonIgnore]
     public TeacherInfo? TeacherInfo { get; set; }
 }

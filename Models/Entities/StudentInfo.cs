@@ -7,7 +7,7 @@ namespace ClassroomRecordApi.Models.Entities
         [Required][MaxLength(100)]public required string FirstName { get; set; }
         [Required][MaxLength(100)]public required string LastName { get; set; }
         [Required][MaxLength(100)]public required string MiddleName { get; set; }
-        [Required]public required DateTime DateofBirth { get; set; }
+        [Required]public required DateOnly DateofBirth { get; set; }
         [MaxLength(10)]public string Gender { get; set; }
         [Required][EmailAddress]public string Email { get; set; }
         [Phone][MaxLength(20)]public string? PhoneNumber { get; set; }
