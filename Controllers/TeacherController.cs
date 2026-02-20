@@ -28,12 +28,18 @@ namespace ClassroomRecordApi.Controllers
 
         //Post
         [HttpPost]
-        public IActionResult AddTeacher(AddTeacherDto addTeacherDto)
+        [HttpPost]
+        public async Task<IActionResult> AddTeacher(AddTeacherDto addTeacherDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var existingUser = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Username == addTeacherDto.Username);
+            if (existingUser is not null)
+                return Conflict("Username is already taken.");
+
             var userEntity = new UserInfo()
             {
                 Username = addTeacherDto.Username,
@@ -80,41 +86,41 @@ namespace ClassroomRecordApi.Controllers
         }
 
         //Put
-        [HttpPut]
-        public IActionResult UpdateTeacherDto (Guid id, UpdateTeacherDto updateTeacherDto)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateTeacher(Guid id, [FromBody] UpdateTeacherDto updateTeacherDto)
         {
-            var teacher = dbContext.Teachers.Find(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var teacher = await dbContext.Teachers.FindAsync(id);
             if (teacher is null)
-                {
-                return NotFound("Teacher Not Found");
-                }
+                return NotFound("Teacher not found.");
+
             teacher.FirstName = updateTeacherDto.FirstName;
             teacher.LastName = updateTeacherDto.LastName;
             teacher.Email = updateTeacherDto.Email;
             teacher.PhoneNumber = updateTeacherDto.PhoneNumber;
             teacher.Department = updateTeacherDto.Department;
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return Ok(teacher);
         }
-
         //Delete teacher
-        [HttpDelete ("({id:guid}")]
-        public IActionResult DeleteTeacher(Guid id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteTeacher(Guid id)
         {
-            var teacher = dbContext.Teachers.Find(id);
-
+            var teacher = await dbContext.Teachers.FindAsync(id);
             if (teacher is null)
-                return NotFound();
+                return NotFound("Teacher not found.");
 
-            var user = dbContext.Users.Find(teacher.UserId);
-            if (user is not null)
+            var user = await dbContext.Users.FindAsync(teacher.UserId);
 
-            dbContext.Users.Remove(user);
             dbContext.Teachers.Remove(teacher);
-            dbContext.SaveChanges();
+            if (user is not null)
+                dbContext.Users.Remove(user);
 
-            return Ok();
+            await dbContext.SaveChangesAsync();
+            return NoContent();
         }
 
     }

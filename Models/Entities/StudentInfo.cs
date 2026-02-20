@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 namespace ClassroomRecordApi.Models.Entities
 {
     public class StudentInfo
@@ -15,6 +16,8 @@ namespace ClassroomRecordApi.Models.Entities
         [Required][Range(7, 12)]public required int GradeLevel { get; set; }
         [MaxLength(100)]public string Section { get; set; }
         [MaxLength(200)]public string AdvicerName { get; set; }
+        public Guid? ClassroomId { get; set; }
+        [JsonIgnore] public ClassroomInfo? Classroom { get; set; }
 
     }
 }

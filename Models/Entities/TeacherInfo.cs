@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ClassroomRecordApi.Models.Entities;
 
@@ -11,5 +12,6 @@ public class TeacherInfo
     [Required][MaxLength(100)][EmailAddress] public string Email { get; set; } = "";
     [MaxLength(20)] public string? PhoneNumber { get; set; }
     [MaxLength(100)] public string? Department { get; set; }
-    public UserInfo UserInfo { get; set; } = null!;
+    [JsonIgnore] public ICollection<ClassroomInfo> AdvisedClassrooms { get; set; } = new List<ClassroomInfo>();
+    [JsonIgnore] public UserInfo UserInfo { get; set; } = null!;
 }
