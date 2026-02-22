@@ -14,4 +14,5 @@ public class TeacherInfo
     [MaxLength(100)] public string? Department { get; set; }
     [JsonIgnore] public ICollection<ClassroomInfo> AdvisedClassrooms { get; set; } = new List<ClassroomInfo>();
     [JsonIgnore] public UserInfo UserInfo { get; set; } = null!;
+    [JsonIgnore] public ICollection<SubjectInfo> Subjects { get; set; } = new List<SubjectInfo>();
 }

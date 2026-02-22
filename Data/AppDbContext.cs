@@ -13,8 +13,8 @@ namespace ClassroomRecordApi.Data
         public DbSet<TeacherInfo> Teachers { get; set; }
         public DbSet<UserInfo> Users { get; set; }
         public DbSet<ClassroomInfo> Classrooms { get; set; } 
-        public DbSet<SchoolInfo> Schools { get; set; }      
-
+        public DbSet<SchoolInfo> Schools { get; set; }
+        public DbSet<SubjectInfo> Subjects { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            
@@ -43,6 +43,19 @@ namespace ClassroomRecordApi.Data
                 .WithMany(c => c.Students)
                 .HasForeignKey(s => s.ClassroomId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<SubjectInfo>()
+                .HasOne(s => s.Classroom)
+                .WithMany(c => c.Subjects)
+                .HasForeignKey(s => s.ClassroomId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<SubjectInfo>()
+                .HasOne(s => s.Teacher)
+                .WithMany(t => t.Subjects)
+                .HasForeignKey(s => s.TeacherId)
+                .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }
