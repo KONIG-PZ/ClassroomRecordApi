@@ -1,25 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-namespace ClassroomRecordApi.Models.Entities
+namespace ClassroomRecordApi.Models
 {
-    public class GradeRecord
+    public class UpdateGradeRecordDto
     {
-        public Guid Id { get; set; }
         [Range(1, 4)] public int? Quarter { get; set; }
         [MaxLength(20)] public string? Semester { get; set; }
         public double? InitialGrade { get; set; }
         public double? TransmutedGrade { get; set; }
         [MaxLength(50)] public string? Remarks { get; set; }
         [MaxLength(20)] public string? SchoolYear { get; set; }
-
-        public Guid StudentId { get; set; }
-        [JsonIgnore] public StudentInfo? Student { get; set; }
-
-        public Guid SubjectId { get; set; }
-        [JsonIgnore] public SubjectInfo? Subject { get; set; }
-
+        [Required] public required Guid StudentId { get; set; }
+        [Required] public required Guid SubjectId { get; set; }
         public Guid? ClassroomId { get; set; }
-        [JsonIgnore] public ClassroomInfo? Classroom { get; set; }
     }
 }

@@ -11,13 +11,12 @@ namespace ClassroomRecordApi.Controllers
     public class SchoolController : ControllerBase
     {
         private readonly AppDbContext dbContext;
-
         public SchoolController(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        // GET: api/school
+        // GET ALL
         [HttpGet]
         public async Task<IActionResult> GetAllSchools()
         {
@@ -25,27 +24,12 @@ namespace ClassroomRecordApi.Controllers
             return Ok(schools);
         }
 
-        // GET: api/school/{id}
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetSchoolById(Guid id)
-        {
-            var school = await dbContext.Schools
-                .Include(s => s.Classrooms)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (school is null)
-                return NotFound("School not found.");
-
-            return Ok(school);
-        }
-
-        // POST: api/school
+        // POST
         [HttpPost]
         public async Task<IActionResult> AddSchool([FromBody] AddSchoolDto addSchoolDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
             var school = new SchoolInfo
             {
                 SchoolName = addSchoolDto.SchoolName,
@@ -59,24 +43,32 @@ namespace ClassroomRecordApi.Controllers
                 Website = addSchoolDto.Website,
                 PrincipalName = addSchoolDto.PrincipalName
             };
-
             dbContext.Schools.Add(school);
             await dbContext.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetSchoolById), new { id = school.Id }, school);
         }
 
-        // PUT: api/school/{id}
+        // GET ID
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetSchoolById(Guid id)
+        {
+            var school = await dbContext.Schools
+                .Include(s => s.Classrooms)
+                .FirstOrDefaultAsync(s => s.Id == id);
+            if (school is null)
+                return NotFound("School not found.");
+            return Ok(school);
+        }
+
+        // PUT
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateSchool(Guid id, [FromBody] UpdateSchoolDto updateSchoolDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
             var school = await dbContext.Schools.FindAsync(id);
             if (school is null)
                 return NotFound("School not found.");
-
             school.SchoolName = updateSchoolDto.SchoolName;
             school.SchoolCode = updateSchoolDto.SchoolCode;
             school.Address = updateSchoolDto.Address;
@@ -87,22 +79,19 @@ namespace ClassroomRecordApi.Controllers
             school.Email = updateSchoolDto.Email;
             school.Website = updateSchoolDto.Website;
             school.PrincipalName = updateSchoolDto.PrincipalName;
-
             await dbContext.SaveChangesAsync();
             return Ok(school);
         }
 
-        // DELETE: api/school/{id}
+        // DELETE
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteSchool(Guid id)
         {
             var school = await dbContext.Schools.FindAsync(id);
             if (school is null)
                 return NotFound("School not found.");
-
             dbContext.Schools.Remove(school);
             await dbContext.SaveChangesAsync();
-
             return NoContent();
         }
     }

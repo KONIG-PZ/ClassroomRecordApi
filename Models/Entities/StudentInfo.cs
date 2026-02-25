@@ -18,6 +18,6 @@ namespace ClassroomRecordApi.Models.Entities
         [MaxLength(200)]public string AdvicerName { get; set; }
         public Guid? ClassroomId { get; set; }
         [JsonIgnore] public ClassroomInfo? Classroom { get; set; }
-
+        [JsonIgnore] public ICollection<GradeRecord> GradeRecords { get; set; } = new List<GradeRecord>();
     }
 }

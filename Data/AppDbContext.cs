@@ -15,6 +15,7 @@ namespace ClassroomRecordApi.Data
         public DbSet<ClassroomInfo> Classrooms { get; set; } 
         public DbSet<SchoolInfo> Schools { get; set; }
         public DbSet<SubjectInfo> Subjects { get; set; }
+        public DbSet<GradeRecord> GradeRecords { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            
@@ -56,6 +57,23 @@ namespace ClassroomRecordApi.Data
                 .HasForeignKey(s => s.TeacherId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<GradeRecord>()
+                .HasOne(g => g.Student)
+                .WithMany(s => s.GradeRecords)
+                .HasForeignKey(g => g.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GradeRecord>()
+                .HasOne(g => g.Subject)
+                .WithMany(s => s.GradeRecords)
+                .HasForeignKey(g => g.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GradeRecord>()
+                .HasOne(g => g.Classroom)
+                .WithMany(c => c.GradeRecords)
+                .HasForeignKey(g => g.ClassroomId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

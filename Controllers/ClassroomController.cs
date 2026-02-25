@@ -17,7 +17,7 @@ namespace ClassroomRecordApi.Controllers
             this.dbContext = dbContext;
         }
 
-        // GET: api/classroom
+        // GET ALL
         [HttpGet]
         public async Task<IActionResult> GetAllClassrooms()
         {
@@ -28,52 +28,7 @@ namespace ClassroomRecordApi.Controllers
             return Ok(classrooms);
         }
 
-        // GET: api/classroom/{id}
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetClassroomById(Guid id)
-        {
-            var classroom = await dbContext.Classrooms
-                .Include(c => c.Adviser)
-                .Include(c => c.School)
-                .Include(c => c.Students)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (classroom is null)
-                return NotFound("Classroom not found.");
-
-            return Ok(classroom);
-        }
-
-        // GET: api/classroom/grade/{gradeLevel}
-        [HttpGet("grade/{gradeLevel:int}")]
-        public async Task<IActionResult> GetClassroomsByGrade(int gradeLevel)
-        {
-            if (gradeLevel < 7 || gradeLevel > 12)
-                return BadRequest("GradeLevel must be between 7 and 12.");
-
-            var classrooms = await dbContext.Classrooms
-                .Where(c => c.GradeLevel == gradeLevel)
-                .Include(c => c.Adviser)
-                .ToListAsync();
-
-            return Ok(classrooms);
-        }
-
-        // GET: api/classroom/{id}/students
-        [HttpGet("{id:guid}/students")]
-        public async Task<IActionResult> GetStudentsInClassroom(Guid id)
-        {
-            var classroom = await dbContext.Classrooms
-                .Include(c => c.Students)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (classroom is null)
-                return NotFound("Classroom not found.");
-
-            return Ok(classroom.Students);
-        }
-
-        // POST: api/classroom
+        // POST
         [HttpPost]
         public async Task<IActionResult> AddClassroom([FromBody] AddClassroomDto addClassroomDto)
         {
@@ -112,7 +67,52 @@ namespace ClassroomRecordApi.Controllers
             return CreatedAtAction(nameof(GetClassroomById), new { id = classroom.Id }, classroom);
         }
 
-        // PUT: api/classroom/{id}
+        // GET ID
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetClassroomById(Guid id)
+        {
+            var classroom = await dbContext.Classrooms
+                .Include(c => c.Adviser)
+                .Include(c => c.School)
+                .Include(c => c.Students)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (classroom is null)
+                return NotFound("Classroom not found.");
+
+            return Ok(classroom);
+        }
+
+        // GET BY GRADE
+        [HttpGet("grade/{gradeLevel:int}")]
+        public async Task<IActionResult> GetClassroomsByGrade(int gradeLevel)
+        {
+            if (gradeLevel < 7 || gradeLevel > 12)
+                return BadRequest("GradeLevel must be between 7 and 12.");
+
+            var classrooms = await dbContext.Classrooms
+                .Where(c => c.GradeLevel == gradeLevel)
+                .Include(c => c.Adviser)
+                .ToListAsync();
+
+            return Ok(classrooms);
+        }
+
+        // GET STUDENTS
+        [HttpGet("{id:guid}/students")]
+        public async Task<IActionResult> GetStudentsInClassroom(Guid id)
+        {
+            var classroom = await dbContext.Classrooms
+                .Include(c => c.Students)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (classroom is null)
+                return NotFound("Classroom not found.");
+
+            return Ok(classroom.Students);
+        }
+
+        // PUT
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateClassroom(Guid id, [FromBody] UpdateClassroomDto updateClassroomDto)
         {
@@ -150,7 +150,7 @@ namespace ClassroomRecordApi.Controllers
             return Ok(classroom);
         }
 
-        // DELETE: api/classroom/{id}
+        // DELETE
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteClassroom(Guid id)
         {

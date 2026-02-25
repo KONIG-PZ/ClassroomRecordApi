@@ -18,5 +18,6 @@ namespace ClassroomRecordApi.Models.Entities
         [JsonIgnore] public SchoolInfo? School { get; set; }
         [JsonIgnore] public ICollection<StudentInfo> Students { get; set; } = new List<StudentInfo>();
         [JsonIgnore] public ICollection<SubjectInfo> Subjects { get; set; } = new List<SubjectInfo>();
+        [JsonIgnore] public ICollection<GradeRecord> GradeRecords { get; set; } = new List<GradeRecord>();
     }
 }

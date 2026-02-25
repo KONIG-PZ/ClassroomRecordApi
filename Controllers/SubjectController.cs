@@ -1,7 +1,6 @@
 ﻿using ClassroomRecordApi.Data;
 using ClassroomRecordApi.Models;
 using ClassroomRecordApi.Models.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,21 +10,27 @@ namespace ClassroomRecordApi.Controllers
     [ApiController]
     public class SubjectController : ControllerBase
     {
-        private readonly AppDbContext  dbContext;
+        private readonly AppDbContext dbContext;
 
         public SubjectController(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        //Get All
+        // GET ALL
+        [HttpGet]
+        public async Task<IActionResult> GetAllSubjects()
+        {
+            var subjects = await dbContext.Subjects.ToListAsync();
+            return Ok(subjects);
+        }
 
-        public IActionResult AddSubject(AddSubjectDto addSubjectDto)
+        // POST
+        [HttpPost]
+        public IActionResult AddSubject([FromBody] AddSubjectDto addSubjectDto)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var subjectEntity = new SubjectInfo()
             {
@@ -43,34 +48,26 @@ namespace ClassroomRecordApi.Controllers
 
             dbContext.Subjects.Add(subjectEntity);
             dbContext.SaveChanges();
-
-            return Ok(subjectEntity);   
+            return Ok(subjectEntity);
         }
 
-        //Get
-        [HttpGet ("{id:guid}")]
+        // GET ID
+        [HttpGet("{id:guid}")]
         public IActionResult GetSubjectById(Guid id)
         {
             var subject = dbContext.Subjects.Find(id);
-
             if (subject is null)
-            {
-                return NotFound("Subject Not Found");     
-            }
+                return NotFound("Subject Not Found");
             return Ok(subject);
         }
 
-        //Put
-
+        // PUT
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateSubject (Guid id, UpdateSubjectDto updateSubjectDto)
+        public IActionResult UpdateSubject(Guid id, [FromBody] UpdateSubjectDto updateSubjectDto)
         {
             var subject = dbContext.Subjects.Find(id);
-
             if (subject is null)
-            {
                 return NotFound("Subject Not Found");
-            }
 
             subject.SubjectName = updateSubjectDto.SubjectName;
             subject.SubjectCode = updateSubjectDto.SubjectCode;
@@ -84,24 +81,19 @@ namespace ClassroomRecordApi.Controllers
             subject.TeacherId = updateSubjectDto.TeacherId;
 
             dbContext.SaveChanges();
-
             return Ok(subject);
         }
 
-        //Delete 
+        // DELETE
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteSubject(Guid id)
         {
             var subject = dbContext.Subjects.Find(id);
-
             if (subject is null)
-            {
                 return NotFound("Subject Not Found");
-            }
 
             dbContext.Subjects.Remove(subject);
             dbContext.SaveChanges();
-
             return Ok();
         }
     }
