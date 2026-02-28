@@ -4,6 +4,7 @@ using ClassroomRecordApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassroomRecordApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228015637_AddEnrollmentInfo")]
+    partial class AddEnrollmentInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,55 +24,6 @@ namespace ClassroomRecordApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("ClassroomRecordApi.Models.Entities.AnnouncementInfo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<Guid?>("ClassroomId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("varchar(2000)");
-
-                    b.Property<DateOnly>("DatePosted")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly?>("ExpiryDate")
-                        .HasColumnType("date");
-
-                    b.Property<bool>("IsSchoolWide")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid?>("SchoolId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassroomId");
-
-                    b.HasIndex("SchoolId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("Announcements");
-                });
 
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.AttendanceRecord", b =>
                 {
@@ -260,60 +214,6 @@ namespace ClassroomRecordApi.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("GradeRecords");
-                });
-
-            modelBuilder.Entity("ClassroomRecordApi.Models.Entities.ParentGuardianInfo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<string>("ContactNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Occupation")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Relationship")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("ParentGuardians");
                 });
 
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.SchoolInfo", b =>
@@ -559,30 +459,6 @@ namespace ClassroomRecordApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ClassroomRecordApi.Models.Entities.AnnouncementInfo", b =>
-                {
-                    b.HasOne("ClassroomRecordApi.Models.Entities.ClassroomInfo", "Classroom")
-                        .WithMany("Announcements")
-                        .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ClassroomRecordApi.Models.Entities.SchoolInfo", "School")
-                        .WithMany("Announcements")
-                        .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ClassroomRecordApi.Models.Entities.TeacherInfo", "Teacher")
-                        .WithMany("Announcements")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Classroom");
-
-                    b.Navigation("School");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.AttendanceRecord", b =>
                 {
                     b.HasOne("ClassroomRecordApi.Models.Entities.ClassroomInfo", "Classroom")
@@ -666,17 +542,6 @@ namespace ClassroomRecordApi.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("ClassroomRecordApi.Models.Entities.ParentGuardianInfo", b =>
-                {
-                    b.HasOne("ClassroomRecordApi.Models.Entities.StudentInfo", "Student")
-                        .WithMany("ParentGuardians")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.StudentInfo", b =>
                 {
                     b.HasOne("ClassroomRecordApi.Models.Entities.ClassroomInfo", "Classroom")
@@ -717,8 +582,6 @@ namespace ClassroomRecordApi.Migrations
 
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.ClassroomInfo", b =>
                 {
-                    b.Navigation("Announcements");
-
                     b.Navigation("AttendanceRecords");
 
                     b.Navigation("Enrollments");
@@ -732,8 +595,6 @@ namespace ClassroomRecordApi.Migrations
 
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.SchoolInfo", b =>
                 {
-                    b.Navigation("Announcements");
-
                     b.Navigation("AttendanceRecords");
 
                     b.Navigation("Classrooms");
@@ -746,8 +607,6 @@ namespace ClassroomRecordApi.Migrations
                     b.Navigation("Enrollments");
 
                     b.Navigation("GradeRecords");
-
-                    b.Navigation("ParentGuardians");
                 });
 
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.SubjectInfo", b =>
@@ -758,8 +617,6 @@ namespace ClassroomRecordApi.Migrations
             modelBuilder.Entity("ClassroomRecordApi.Models.Entities.TeacherInfo", b =>
                 {
                     b.Navigation("AdvisedClassrooms");
-
-                    b.Navigation("Announcements");
 
                     b.Navigation("Subjects");
                 });

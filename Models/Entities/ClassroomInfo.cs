@@ -19,5 +19,8 @@ namespace ClassroomRecordApi.Models.Entities
         [JsonIgnore] public ICollection<StudentInfo> Students { get; set; } = new List<StudentInfo>();
         [JsonIgnore] public ICollection<SubjectInfo> Subjects { get; set; } = new List<SubjectInfo>();
         [JsonIgnore] public ICollection<GradeRecord> GradeRecords { get; set; } = new List<GradeRecord>();
+        [JsonIgnore] public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
+        [JsonIgnore] public ICollection<EnrollmentInfo> Enrollments { get; set; } = new List<EnrollmentInfo>();
+        [JsonIgnore] public ICollection<AnnouncementInfo> Announcements { get; set; } = new List<AnnouncementInfo>();
     }
 }

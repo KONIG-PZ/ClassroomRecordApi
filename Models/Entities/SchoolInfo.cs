@@ -17,5 +17,7 @@ namespace ClassroomRecordApi.Models.Entities
         [MaxLength(200)] public string? Website { get; set; }
         [MaxLength(100)] public string? PrincipalName { get; set; }
         [JsonIgnore]public ICollection<ClassroomInfo> Classrooms { get; set; } = new List<ClassroomInfo>();
+        [JsonIgnore] public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();
+        [JsonIgnore] public ICollection<AnnouncementInfo> Announcements { get; set; } = new List<AnnouncementInfo>();
     }
 }

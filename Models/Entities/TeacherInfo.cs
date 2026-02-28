@@ -15,4 +15,5 @@ public class TeacherInfo
     [JsonIgnore] public ICollection<ClassroomInfo> AdvisedClassrooms { get; set; } = new List<ClassroomInfo>();
     [JsonIgnore] public UserInfo UserInfo { get; set; } = null!;
     [JsonIgnore] public ICollection<SubjectInfo> Subjects { get; set; } = new List<SubjectInfo>();
+    [JsonIgnore] public ICollection<AnnouncementInfo> Announcements { get; set; } = new List<AnnouncementInfo>();
 }

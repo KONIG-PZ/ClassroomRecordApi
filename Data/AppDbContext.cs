@@ -16,9 +16,61 @@ namespace ClassroomRecordApi.Data
         public DbSet<SchoolInfo> Schools { get; set; }
         public DbSet<SubjectInfo> Subjects { get; set; }
         public DbSet<GradeRecord> GradeRecords { get; set; }
+        public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
+        public DbSet<EnrollmentInfo> Enrollments { get; set; }
+        public DbSet<ParentGuardianInfo> ParentGuardians { get; set; }
+        public DbSet<AnnouncementInfo> Announcements { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+            modelBuilder.Entity<AnnouncementInfo>()
+                .HasOne(a => a.Classroom)
+                .WithMany(c => c.Announcements)
+                .HasForeignKey(a => a.ClassroomId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<AnnouncementInfo>()
+                .HasOne(a => a.School)
+                .WithMany(s => s.Announcements)
+                .HasForeignKey(a => a.SchoolId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<AnnouncementInfo>()
+                .HasOne(a => a.Teacher)
+                .WithMany(t => t.Announcements)
+                .HasForeignKey(a => a.TeacherId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ParentGuardianInfo>()
+                .HasOne(p => p.Student)
+                .WithMany(s => s.ParentGuardians)
+                .HasForeignKey(p => p.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<EnrollmentInfo>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.Enrollments)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<EnrollmentInfo>()
+                .HasOne(e => e.Classroom)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.ClassroomId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<AttendanceRecord>()
+                .HasOne(a => a.Student)
+                .WithMany(s => s.AttendanceRecords)
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AttendanceRecord>()
+                .HasOne(a => a.Classroom)
+                .WithMany(c => c.AttendanceRecords)
+                .HasForeignKey(a => a.ClassroomId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<UserInfo>()
                 .HasOne(u => u.TeacherInfo)
                 .WithOne(t => t.UserInfo)
